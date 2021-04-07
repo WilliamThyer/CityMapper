@@ -62,6 +62,9 @@ def plot_cycleways(city_name: str, cycleways, roads, city_area, road_cycleway_ra
     ax.axis('off')
     plt.tight_layout()
 
+    if road_cycleway_ratio is True:
+        return fig, ax, rc_ratio
+        
     return fig, ax
 
 def calc_road_cycleway_ratio(cycleways, roads):
