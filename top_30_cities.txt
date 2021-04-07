@@ -1,0 +1,30 @@
+New York City, NY
+Los Angeles, CA
+Chicago, IL
+Houston, TX
+Phoenix, AZ
+Philadelphia, PA
+San Antonio, TX
+San Diego, CA
+Dallas, TX
+San Jose, CA
+Austin, TX
+Jacksonville, FL
+Fort Worth, TX
+Columbus, OH
+Charlotte, NC
+San Francisco, CA
+Indianapolis, IN
+Seattle, WA
+Denver, CO
+Washington, DC
+Boston, MA
+El Paso, TX
+Nashville, TN
+Detroit, MI
+Oklahoma City, OK	
+Portland, OR
+Las Vegas, NV
+Memphis, TN
+Louisville, KY
+Baltimore, MD
