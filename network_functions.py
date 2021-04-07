@@ -29,12 +29,13 @@ def get_city(city_name: str):
 
     return cycleways,roads,city_area
 
-def plot_cycleways(city_name: str, cycleways, roads, city_area):
+def plot_cycleways(city_name: str, cycleways, roads, city_area, road_cycleway_ratio = False, signature: bool=True):
     """
     Plots cycleways overlaid city area. Returns matplotlib fig,ax.
     cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
     roads: (networkx.MultiDiGraph) road info from get_city func, or ox.graph_from_place
     city_area: (geopandas.geodataframe.GeoDataFrame) city area from get_city func, or osmnx.geocode_to_gdf
+    signature: (bool) set to false to remove signature.
     """
     fig, ax = plt.subplots(figsize=(4,4))
     ax.set_title(city_name,fontsize=12)
@@ -43,11 +44,21 @@ def plot_cycleways(city_name: str, cycleways, roads, city_area):
     ox.plot_graph(roads,ax=ax,node_size=0,edge_linewidth=.25,edge_color='dimgrey')
     ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.65,edge_color='dodgerblue')
     
-    fig.text(s="By William Thyer\nData from OpenStreetMap", 
-            x=1, y=-.01, transform = ax.transAxes,
-            horizontalalignment='right',verticalalignment='top',
-            color='k',fontsize=5
-            )  
+    if signature is True:
+        fig.text(s="By William Thyer\nData from OpenStreetMap", 
+                x=1, y=-.01, transform = ax.transAxes,
+                horizontalalignment='right',verticalalignment='top',
+                color='k',fontsize=5
+                )
+    if road_cycleway_ratio is True:
+        rc_ratio = calc_road_cycleway_ratio(cycleways,roads)
+        rc_ratio = round(rc_ratio,1)
+        fig.text(s=f'Road-Cycleway Ratio: {rc_ratio}',
+                x=.5, y=-.01, transform = ax.transAxes,
+                horizontalalignment='center',verticalalignment='top',
+                color='k',fontsize=6
+                )
+
     ax.axis('off')
     plt.tight_layout()
 
@@ -64,3 +75,11 @@ def calc_road_cycleway_ratio(cycleways, roads):
     rc_ratio = r['edge_length_total']/c['edge_length_total']
     return rc_ratio
 
+def get_top30_list():
+    """
+    Returns list of top 30 most populous cities from txt files
+    """
+    my_file = open("top_30_cities.txt", "r")
+    content = my_file.read()
+    top30 = content.split('\n')
+    return top30
