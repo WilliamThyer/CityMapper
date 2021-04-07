@@ -8,7 +8,7 @@ Using OSMnx in Python to visualize and quantify bikeability of cities.
 [Useful thread related to cycleways](https://github.com/gboeing/osmnx/issues/151)  
 [Other tutorial](https://automating-gis-processes.github.io/CSC/notebooks/L3/retrieve_osm_data.html)  
 
-## Examples
-[Map of Chicago](/Chicago,&#32;Illinois.pdf)
-
-
+## Example Maps
+[Chicago](examples/Chicago,&#32;Illinois.pdf)  
+[New York City](examples/New&#32;York&#32;City,&#32;New&#32;York.pdf)  
+[Tallahassee, FL](examples/Tallahassee,&#32;Florida.pdf)  
