@@ -16,6 +16,16 @@ def get_cycleways(city_name: str):
     cycleways = ox.utils_graph.remove_isolated_nodes(cycleways)
     return cycleways
 
+def get_footprints(city_name):
+    """
+    Returns footprints of buildings. Seems to timeout for larger cities.
+    """
+    tags = {"building": True}
+    footprints = ox.geometries_from_place(city_name, tags)
+    # ox.plot_footprints(footprints, ax=ax,color='dimgrey')
+
+    return footprints
+
 def get_city(city_name: str):
     """
     Returns cycleways and road info (networkx.MultiDiGraph) and city area (geopandas.geodataframe.GeoDataFrame).
@@ -29,7 +39,7 @@ def get_city(city_name: str):
 
     return cycleways,roads,city_area
 
-def plot_cycleways(city_name: str, cycleways, roads, city_area, road_cycleway_ratio = False, signature: bool=True):
+def plot_cycleways(city_name: str, cycleways, roads=None, city_area=None, road_cycleway_ratio: float=None, signature: bool=True):
     """
     Plots cycleways overlaid city area. Returns matplotlib fig,ax.
     cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
@@ -40,20 +50,22 @@ def plot_cycleways(city_name: str, cycleways, roads, city_area, road_cycleway_ra
     fig, ax = plt.subplots(figsize=(4,4))
     ax.set_title(city_name,fontsize=12)
 
-    city_area.plot(ax=ax, facecolor='gainsboro')
-    ox.plot_graph(roads,ax=ax,node_size=0,edge_linewidth=.25,edge_color='dimgrey')
+    if city_area is not None:
+        city_area.plot(ax=ax, facecolor='gainsboro')
+    if roads is not None:
+        ox.plot_graph(roads,ax=ax,node_size=0,edge_linewidth=.25,edge_color='dimgrey')
     ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.65,edge_color='dodgerblue')
     
     if signature is True:
-        fig.text(s="By William Thyer\nData from OpenStreetMap", 
+        fig.text(s="@wthyer\nOpenStreetMap", 
                 x=1, y=-.01, transform = ax.transAxes,
                 horizontalalignment='right',verticalalignment='top',
                 color='k',fontsize=5
                 )
-    if road_cycleway_ratio is True:
-        rc_ratio = calc_road_cycleway_ratio(cycleways,roads)
-        rc_ratio = round(rc_ratio,1)
-        fig.text(s=f'Road-Cycleway Ratio: {rc_ratio}',
+
+    if road_cycleway_ratio is not None:
+        rc_ratio_round = round(road_cycleway_ratio,1)
+        fig.text(s=f'Road-Cycleway Ratio = {rc_ratio_round}',
                 x=.5, y=-.01, transform = ax.transAxes,
                 horizontalalignment='center',verticalalignment='top',
                 color='k',fontsize=6
@@ -61,9 +73,6 @@ def plot_cycleways(city_name: str, cycleways, roads, city_area, road_cycleway_ra
 
     ax.axis('off')
     plt.tight_layout()
-
-    if road_cycleway_ratio is True:
-        return fig, ax, rc_ratio
         
     return fig, ax
 
