@@ -1,7 +1,7 @@
 # bike_networks
 Using OSMnx in Python to visualize and quantify bikeability of cities.
 
-<img src="examples/png/Chicago,&#32;IL.png" alt="drawing" height="300"/> <img src="examples/png/Austin,&#32;TX.png" alt="drawing" height="300"/> <img src="examples/png/New&#32;York&#32;City,&#32;NY.png" alt="drawing" height="300"/>
+<img src="examples/png/Chicago,&#32;IL.png" alt="drawing" height="300"/> <img src="examples/png/Austin,&#32;TX.png" alt="drawing" height="300"/> <img src="examples/png/Dallas,&#32;TX.png" alt="drawing" height="300"/>  <img src="examples/png/New&#32;York&#32;City,&#32;NY.png" alt="drawing" height="300"/>
 
 ## Files
 **network_functions.py:**  
