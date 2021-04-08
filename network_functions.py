@@ -18,6 +18,7 @@ def get_cycleways(city_name: str):
 
 def get_footprints(city_name):
     """
+    UNSTABLE
     Returns footprints of buildings. Seems to timeout for larger cities.
     """
     tags = {"building": True}
