@@ -40,7 +40,15 @@ def get_city(city_name: str):
 
     return cycleways,roads,city_area
 
-def plot_cycleways(city_name: str, cycleways, roads=None, city_area=None, road_cycleway_ratio: float=None, signature: bool=True):
+def plot_cycleways(
+    city_name: str, 
+    cycleways, 
+    roads=None, 
+    city_area=None, 
+    road_cycleway_ratio: float=None, 
+    signature: bool=True,
+    save_figure=True,
+    extension='.png'):
     """
     Plots cycleways overlaid city area. Returns matplotlib fig,ax.
     cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
@@ -74,7 +82,10 @@ def plot_cycleways(city_name: str, cycleways, roads=None, city_area=None, road_c
 
     ax.axis('off')
     plt.tight_layout()
-        
+    
+    if save_figure is True:
+        savefig(city_name,fig,extension=extension)
+
     return fig, ax
 
 def calc_road_cycleway_ratio(cycleways, roads):
@@ -88,9 +99,9 @@ def calc_road_cycleway_ratio(cycleways, roads):
     rc_ratio = r['edge_length_total']/c['edge_length_total']
     return rc_ratio
 
-def savefig(city_name,fig):
-    fig.savefig('test.png',dpi=500,facecolor='w',transparent=False)
-    return fig
+def savefig(city_name,fig,extension='.png'):
+    filename = f'examples/{extension[1:]}/{city_name}{extension}'
+    fig.savefig(filename,dpi=500,facecolor='w',transparent=False);
 
 def get_top30_list():
     """
