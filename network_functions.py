@@ -55,7 +55,7 @@ def plot_cycleways(city_name: str, cycleways, roads=None, city_area=None, road_c
         city_area.plot(ax=ax, facecolor='gainsboro')
     if roads is not None:
         ox.plot_graph(roads,ax=ax,node_size=0,edge_linewidth=.25,edge_color='dimgrey')
-    ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.65,edge_color='dodgerblue')
+    ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.85,edge_color='limegreen')
     
     if signature is True:
         fig.text(s="@wthyer\nOpenStreetMap", 
@@ -87,6 +87,10 @@ def calc_road_cycleway_ratio(cycleways, roads):
     r = ox.basic_stats(roads)
     rc_ratio = r['edge_length_total']/c['edge_length_total']
     return rc_ratio
+
+def savefig(city_name,fig):
+    fig.savefig('test.png',dpi=500,facecolor='w',transparent=False)
+    return fig
 
 def get_top30_list():
     """
