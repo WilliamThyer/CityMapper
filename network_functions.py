@@ -98,7 +98,7 @@ def plot_cycleways(
 
     return fig, ax
 
-def calc_rc_ratio_round(cycleways, roads):
+def calc_road_cycleway_ratio(cycleways, roads):
     """
     Returns ratio of cycleways to roads. Uses osmnx.basic_stats.
     cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
