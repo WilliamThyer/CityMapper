@@ -66,7 +66,7 @@ def plot_cycleways(
     ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.85,edge_color='limegreen')
     
     if signature is True:
-        fig.text(s="@wthyer\nOpenStreetMap", 
+        fig.text(s="@WThyer\nOpenStreetMap", 
                 x=1, y=-.01, transform = ax.transAxes,
                 horizontalalignment='right',verticalalignment='top',
                 color='k',fontsize=5
@@ -84,7 +84,7 @@ def plot_cycleways(
     plt.tight_layout()
     
     if save_figure is True:
-        savefig(city_name,fig,extension=extension)
+        savefig(city_name=city_name,fig=fig,extension=extension)
 
     return fig, ax
 
@@ -101,7 +101,7 @@ def calc_road_cycleway_ratio(cycleways, roads):
 
 def savefig(city_name,fig,extension='.png'):
     filename = f'examples/{extension[1:]}/{city_name}{extension}'
-    fig.savefig(filename,dpi=500,facecolor='w',transparent=False);
+    fig.savefig(filename,dpi=1000,facecolor='w',transparent=False)
 
 def get_top30_list():
     """
