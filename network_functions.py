@@ -112,12 +112,3 @@ def calc_road_cycleway_ratio(cycleways, roads):
 def savefig(city_name,fig,extension='.png'):
     filename = f'examples/{extension[1:]}/{city_name}{extension}'
     fig.savefig(filename,dpi=1000,facecolor='w',transparent=False)
-
-def get_top30_list():
-    """
-    Returns list of top 30 most populous cities from txt files
-    """
-    my_file = open("top_30_cities.txt", "r")
-    content = my_file.read()
-    top30 = content.split('\n')
-    return top30
