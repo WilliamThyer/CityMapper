@@ -54,6 +54,7 @@ def plot_cycleways(
     cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
     roads: (networkx.MultiDiGraph) road info from get_city func, or ox.graph_from_place
     city_area: (geopandas.geodataframe.GeoDataFrame) city area from get_city func, or osmnx.geocode_to_gdf
+    road_cycleway_ratio: (float) ratio of roads to cycleways in the city
     signature: (bool) set to false to remove signature.
     """
     fig, ax = plt.subplots(figsize=(4,4))
