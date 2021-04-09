@@ -64,8 +64,8 @@ def plot_cycleways(
 
     elif road_cycleway_ratio is not None:
         # make subtitle in hacky way
-        rc_ratio_round = round(road_cycleway_ratio,2)
-        fig.text(s=f'Cycleway-Road Ratio = {rc_ratio_round}',
+        rc_ratio_round = round(road_cycleway_ratio)
+        fig.text(s=f'Road to Cycleway Ratio is {rc_ratio_round}:1',
                 x=.5, y=1.01, transform = ax.transAxes,
                 horizontalalignment='center',verticalalignment='bottom',
                 color='k',fontsize=6
