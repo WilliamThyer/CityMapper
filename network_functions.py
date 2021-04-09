@@ -45,7 +45,7 @@ def plot_cycleways(
     cycleways, 
     roads=None, 
     city_area=None, 
-    cycleway_road_ratio: float=None, 
+    road_cycleway_ratio: float=None, 
     signature: bool=True,
     save_figure=True,
     extension='.png'):
@@ -59,13 +59,13 @@ def plot_cycleways(
     """
     fig, ax = plt.subplots(figsize=(4,4))
 
-    if cycleway_road_ratio is None:
+    if road_cycleway_ratio is None:
         ax.set_title(city_name,fontsize=12)
 
-    elif cycleway_road_ratio is not None:
+    elif road_cycleway_ratio is not None:
         # make subtitle in hacky way
-        cr_ratio_round = round(cycleway_road_ratio,2)
-        fig.text(s=f'Cycleway-Road Ratio = {cr_ratio_round}',
+        rc_ratio_round = round(road_cycleway_ratio,2)
+        fig.text(s=f'Cycleway-Road Ratio = {rc_ratio_round}',
                 x=.5, y=1.01, transform = ax.transAxes,
                 horizontalalignment='center',verticalalignment='bottom',
                 color='k',fontsize=6
@@ -98,7 +98,7 @@ def plot_cycleways(
 
     return fig, ax
 
-def calc_cycleway_road_ratio(cycleways, roads):
+def calc_rc_ratio_round(cycleways, roads):
     """
     Returns ratio of cycleways to roads. Uses osmnx.basic_stats.
     cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
@@ -106,8 +106,8 @@ def calc_cycleway_road_ratio(cycleways, roads):
     """
     c = ox.basic_stats(cycleways)
     r = ox.basic_stats(roads)
-    cr_ratio = c['edge_length_total']/r['edge_length_total']
-    return cr_ratio
+    rc_ratio = r['edge_length_total']/c['edge_length_total']
+    return rc_ratio
 
 def savefig(city_name,fig,extension='.png'):
     filename = f'examples/{extension[1:]}/{city_name}{extension}'
