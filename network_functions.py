@@ -57,7 +57,24 @@ def plot_cycleways(
     signature: (bool) set to false to remove signature.
     """
     fig, ax = plt.subplots(figsize=(4,4))
-    ax.set_title(city_name,fontsize=12)
+
+    if road_cycleway_ratio is None:
+        ax.set_title(city_name,fontsize=12)
+
+    elif road_cycleway_ratio is not None:
+        # make subtitle in hacky way
+        rc_ratio_round = round(road_cycleway_ratio,1)
+        fig.text(s=f'Road-Cycleway Ratio = {rc_ratio_round}',
+                x=.5, y=1.01, transform = ax.transAxes,
+                horizontalalignment='center',verticalalignment='bottom',
+                color='k',fontsize=6
+                )
+
+        fig.text(s=city_name,
+                x=.5, y=1.04, transform = ax.transAxes,
+                horizontalalignment='center',verticalalignment='bottom',
+                color='k',fontsize=12
+                )
 
     if city_area is not None:
         city_area.plot(ax=ax, facecolor='gainsboro')
@@ -70,14 +87,6 @@ def plot_cycleways(
                 x=1, y=-.01, transform = ax.transAxes,
                 horizontalalignment='right',verticalalignment='top',
                 color='k',fontsize=5
-                )
-
-    if road_cycleway_ratio is not None:
-        rc_ratio_round = round(road_cycleway_ratio,1)
-        fig.text(s=f'Road-Cycleway Ratio = {rc_ratio_round}',
-                x=.5, y=-.01, transform = ax.transAxes,
-                horizontalalignment='center',verticalalignment='top',
-                color='k',fontsize=6
                 )
 
     ax.axis('off')
