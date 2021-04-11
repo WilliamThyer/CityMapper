@@ -1,6 +1,7 @@
 # bike_networks
 Using OSMnx in Python to visualize and quantify bikeability of cities.
 
+[Click to enlarge figure](examples/best_worst_cities.pdf)   
 <img src="examples/best_worst_cities.png" alt="drawing" height="500"/>
 
 ## Files
