@@ -72,7 +72,7 @@ def plot_cycleways(
                 )
 
         fig.text(s=city_name,
-                x=.5, y=1.04, transform = ax.transAxes,
+                x=.5, y=1.05, transform = ax.transAxes,
                 horizontalalignment='center',verticalalignment='bottom',
                 color='k',fontsize=12
                 )
