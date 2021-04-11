@@ -1,7 +1,8 @@
 # bike_networks
 Using OSMnx in Python to visualize and quantify bikeability of cities.
 
-<img src="examples/png/Chicago,&#32;IL.png" alt="drawing" height="300"/> <img src="examples/png/Austin,&#32;TX.png" alt="drawing" height="300"/> <img src="examples/png/Dallas,&#32;TX.png" alt="drawing" height="300"/>  <img src="examples/png/New&#32;York&#32;City,&#32;NY.png" alt="drawing" height="300"/>
+[Click to enlarge figure](examples/best_worst_cities.pdf)   
+<img src="examples/best_worst_cities.png" alt="drawing" width="600"/>
 
 ## Files
 **network_functions.py:**  
@@ -12,6 +13,7 @@ Main notebook for creating a map of cycleways and public roads in any given city
 Goes through top 30 cities and creates a cycleway map. Used to find best and worst cities for bike infrastructure.  
 
 ## [More Example Maps](examples/pdf/)  
+<img src="examples/png/Chicago,&#32;IL.png" alt="drawing" height="300"/> <img src="examples/png/Austin,&#32;TX.png" alt="drawing" height="300"/> <img src="examples/png/Dallas,&#32;TX.png" alt="drawing" height="300"/>  <img src="examples/png/New&#32;York&#32;City,&#32;NY.png" alt="drawing" height="300"/>
 
 ## Resources
 [OSMnx Docs](https://osmnx.readthedocs.io/en/stable/)  
