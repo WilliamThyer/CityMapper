@@ -2,7 +2,9 @@ import osmnx as ox
 import numpy as np
 import matplotlib.pyplot as plt
 
-plt.rcParams["font.family"] = "serif"
+plt.rcParams.update({
+    "figure.facecolor":  (1.0, 1.0, 1.0, 1.0),
+    "font.family": "serif"})
 
 def get_cycleways(city_name: str):
     """
@@ -16,6 +18,7 @@ def get_cycleways(city_name: str):
     cycleways = ox.utils_graph.remove_isolated_nodes(cycleways)
     return cycleways
 
+
 def get_footprints(city_name):
     """
     UNSTABLE
@@ -26,6 +29,7 @@ def get_footprints(city_name):
     # ox.plot_footprints(footprints, ax=ax,color='dimgrey')
 
     return footprints
+
 
 def get_city(city_name: str):
     """
@@ -38,15 +42,16 @@ def get_city(city_name: str):
     # get roads
     roads = ox.graph_from_place(city_name,network_type='drive')
 
-    return cycleways,roads,city_area
+    return cycleways, roads, city_area
+
 
 def plot_cycleways(
     city_name: str, 
-    cycleways, 
+    cycleways=None, 
     roads=None, 
     city_area=None, 
-    road_cycleway_ratio: float=None, 
-    signature: bool=True,
+    road_cycleway_ratio: float = None, 
+    signature: bool = True,
     save_figure=True,
     extension='.png'):
     """
@@ -81,7 +86,8 @@ def plot_cycleways(
         city_area.plot(ax=ax, facecolor='gainsboro')
     if roads is not None:
         ox.plot_graph(roads,ax=ax,node_size=0,edge_linewidth=.25,edge_color='dimgrey')
-    ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.85,edge_color='limegreen')
+    if cycleways is not None:
+        ox.plot_graph(cycleways,ax=ax,node_size=0,edge_linewidth=.85,edge_color='limegreen')
     
     if signature is True:
         fig.text(s="@WThyer\nOpenStreetMap", 
