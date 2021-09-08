@@ -7,9 +7,12 @@ class BikeNetworkMapper:
     def __init__(
         self,
         city_name: str,
+        city_limits: bool = False,
         plt_params_dict: dict = None):
 
         self.city_name = city_name
+        self.city_limits = city_limits
+
         self.cycleways = None
         self.roads = None
         self.city_area = None
@@ -29,7 +32,12 @@ class BikeNetworkMapper:
         """
         useful_tags = ox.settings.useful_tags_way + ['cycleway']
         ox.config(use_cache=True, log_console=True, useful_tags_way=useful_tags)
-        cycleways = ox.graph_from_place(query = self.city_name, network_type='bike', simplify=False)
+
+        if self.city_limits is True:
+            cycleways = ox.graph_from_place(query = self.city_name, network_type='bike', simplify=False)
+        else:
+            cycleways = ox.graph_from_bbox(self.north, self.south, self.east, self.west, network_type='bike', simplify=False)
+
         non_cycleways = [(u, v, k) for u, v, k, d in cycleways.edges(keys=True, data=True) if not ('cycleway' in d or d['highway']=='cycleway')]
         cycleways.remove_edges_from(non_cycleways)
         self.cycleways = ox.utils_graph.remove_isolated_nodes(cycleways)
@@ -53,18 +61,18 @@ class BikeNetworkMapper:
         """
         print(f"Loading data for {self.city_name}. May take a few minutes.")
 
-        # get cycleways 
-        if (self.cycleways is None) | (overwrite is True):
-            self.get_cycleways()
-        # get city area
-        if (self.city_area is None) | (overwrite is True):
-            self.city_area = ox.geocode_to_gdf(self.city_name)
-        # get roads
-        if (self.roads is None) | (overwrite is True):
+        self.city_area = ox.geocode_to_gdf(self.city_name)
+        self.west, self.south, self.east, self.north = self.city_area.total_bounds
+
+        self.get_cycleways()
+
+        if self.city_limits is True:
             self.roads = ox.graph_from_place(self.city_name, network_type='drive')
-        # get water
-        if (self.water is None) | (overwrite is True):
             self.water = ox.geometries_from_polygon(self.city_area.unary_union, tags={'water':['river','lake'],"natural":["water"]})
+        
+        else:
+            self.roads = ox.graph_from_bbox(self.north, self.south, self.east, self.west, network_type='drive')
+            self.water = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={'water':['river','lake'],"natural":["water"]})
 
 
     def calc_road_cycleway_ratio(self):
