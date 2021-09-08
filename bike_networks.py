@@ -66,13 +66,22 @@ class BikeNetworkMapper:
 
         self.get_cycleways()
 
+        green_tags = {
+        'landuse':['village_green','grass','forest','cemetary','greenfield','meadow','orchard','vineyard'], 
+        'leisure':['park','garden','golf_course','nature_reserve'], 
+        'natural':['shrubbery','scrub','fell','grassland','wood'],
+        'tourism': 'camp_site',
+        'amenity': 'grave_yard'}
+
         if self.city_limits is True:
             self.roads = ox.graph_from_place(self.city_name, network_type='drive')
             self.water = ox.geometries_from_polygon(self.city_area.unary_union, tags={'water':['river','lake'],"natural":["water"]})
+            self.green = ox.geometries_from_polygon(self.city_area.unary_union, tags=green_tags)
         
         else:
             self.roads = ox.graph_from_bbox(self.north, self.south, self.east, self.west, network_type='drive')
             self.water = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={'water':['river','lake'],"natural":["water"]})
+            self.green = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags=green_tags)
 
 
     def calc_road_cycleway_ratio(self):
@@ -126,10 +135,16 @@ class BikeNetworkMapper:
                 ax=ax, 
                 facecolor='gainsboro')
 
+        if self.green is not None:
+            ox.plot_footprints(
+                self.green, ax=ax,
+                color='forestgreen', bgcolor='white',
+                show=False, close=False)
+
         if self.water is not None:
             ox.plot_footprints(
                 self.water, ax=ax,
-                color='dodgerblue', bgcolor='white',
+                color='cornflowerblue', bgcolor='white',
                 show=False, close=False)
 
         if self.roads is not None:
