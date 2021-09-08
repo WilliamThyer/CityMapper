@@ -2,8 +2,6 @@ import osmnx as ox
 import numpy as np
 import matplotlib.pyplot as plt
 
-plt.rcParams.update()
-
 class BikeNetworkMapper:
 
     def __init__(
@@ -15,6 +13,7 @@ class BikeNetworkMapper:
         self.cycleways = None
         self.roads = None
         self.city_area = None
+        self.water = None
         self.rc_ratio = None
 
         if plt_params_dict is None:
@@ -48,18 +47,24 @@ class BikeNetworkMapper:
         return footprints
 
 
-    def get_city(self):
+    def get_city(self, overwrite=False):
         """
         Creates cycleways and road info (networkx.MultiDiGraph) and city area (geopandas.geodataframe.GeoDataFrame).
         """
         print(f"Loading data for {self.city_name}. May take a few minutes.")
 
         # get cycleways 
-        self.get_cycleways()
+        if (self.cycleways is None) | (overwrite is True):
+            self.get_cycleways()
         # get city area
-        self.city_area = ox.geocode_to_gdf(self.city_name)
+        if (self.city_area is None) | (overwrite is True):
+            self.city_area = ox.geocode_to_gdf(self.city_name)
         # get roads
-        self.roads = ox.graph_from_place(self.city_name, network_type='drive')
+        if (self.roads is None) | (overwrite is True):
+            self.roads = ox.graph_from_place(self.city_name, network_type='drive')
+        # get water
+        if (self.water is None) | (overwrite is True):
+            self.water = ox.geometries_from_polygon(self.city_area.unary_union, tags={'water':['river','lake'],"natural":["water"]})
 
 
     def calc_road_cycleway_ratio(self):
@@ -84,7 +89,7 @@ class BikeNetworkMapper:
         road_cycleway_ratio_subtitle: bool = True, 
         signature: bool = True,
         save_figure = True,
-        extension = '.png'):
+        extension = ['png']):
         """
         Plots cycleways overlaid city area. Returns matplotlib fig,ax.
         cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
@@ -93,7 +98,7 @@ class BikeNetworkMapper:
         road_cycleway_ratio: (float) ratio of roads to cycleways in the city
         signature: (bool) set to false to remove signature.
         """
-        fig, ax = plt.subplots(figsize=(4,4))
+        fig, ax = plt.subplots(figsize=(6,6))
 
         if road_cycleway_ratio_subtitle is False:
             ax.set_title(self.city_name,fontsize=12)
@@ -117,11 +122,31 @@ class BikeNetworkMapper:
                     )
         
         if self.city_area is not None:
-            self.city_area.plot(ax=ax, facecolor='gainsboro')
+            self.city_area.plot(
+                ax=ax, 
+                facecolor='gainsboro')
+
+        if self.water is not None:
+            ox.plot_footprints(
+                self.water, ax=ax,
+                color='dodgerblue', bgcolor='white',
+                show=False, close=False)
+
         if self.roads is not None:
-            ox.plot_graph(self.roads,ax=ax,node_size=0,edge_linewidth=.25,edge_color='dimgrey')
+            ox.plot_graph(
+                self.roads,ax=ax,
+                node_size=0,
+                edge_linewidth=.25,
+                edge_color='dimgrey',
+                show=False, close=False)
+
         if self.cycleways is not None:
-            ox.plot_graph(self.cycleways,ax=ax,node_size=0,edge_linewidth=.85,edge_color='limegreen')
+            ox.plot_graph(
+                self.cycleways,ax=ax,
+                node_size=0,
+                edge_linewidth=.85,
+                edge_color='limegreen',
+                show=False, close=False)
         
         if signature is True:
             fig.text(s="@WThyer\nOpenStreetMap", 
@@ -139,6 +164,9 @@ class BikeNetworkMapper:
         return fig, ax
 
 
-    def savefig(self, fig, extension='.png'):
-        filename = f'examples/{extension[1:]}/{self.city_name}{extension}'
-        fig.savefig(filename,dpi=1000,facecolor='w',transparent=False)
+    def savefig(self, fig, extension=['png']):
+        if not isinstance(extension, list):
+            extension = [extension]
+        for ext in extension:
+            filename = f'examples/{ext}/{self.city_name}.{ext}'
+            fig.savefig(filename,dpi=1000,facecolor='w',transparent=False,bbox_inches='tight')
