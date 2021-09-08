@@ -109,18 +109,10 @@ class BikeNetworkMapper:
                 self.calc_road_cycleway_ratio()
 
             rc_ratio_round = round(self.rc_ratio)
-            fig.text(s=f'Road to Cycleway Ratio is {rc_ratio_round}:1',
-                    x=.5, y=1.01, transform = ax.transAxes,
-                    horizontalalignment='center',verticalalignment='bottom',
-                    color='k',fontsize=6
-                    )
 
-            fig.text(s=self.city_name,
-                    x=.5, y=1.05, transform = ax.transAxes,
-                    horizontalalignment='center',verticalalignment='bottom',
-                    color='k',fontsize=12
-                    )
-        
+            plt.title(f'Road to Cycleway Ratio is {rc_ratio_round}:1',fontsize=8)
+            plt.suptitle(self.city_name,fontsize=14, y=.955)
+
         if self.city_area is not None:
             self.city_area.plot(
                 ax=ax, 
