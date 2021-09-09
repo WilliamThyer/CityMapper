@@ -44,15 +44,6 @@ class BikeNetworkMapper:
         self.cycleways = ox.utils_graph.remove_isolated_nodes(cycleways)
 
 
-    def get_buildings(self):
-        """
-        UNSTABLE
-        Returns footprints of buildings. Seems to timeout for larger cities.
-        """
-
-        self.buildings = ox.geometries_from_place(self.city_name, tags = {"building": True, 'landuse': 'construction'})
-
-
     def get_city(self, overwrite=False):
         """
         Creates cycleways and road info (networkx.MultiDiGraph) and city area (geopandas.geodataframe.GeoDataFrame).
@@ -103,10 +94,11 @@ class BikeNetworkMapper:
 
     def plot_cycleways(
         self,
-        road_cycleway_ratio_subtitle: bool = True, 
-        signature: bool = True,
-        save_figure = True,
-        extension = ['png']):
+        road_cycleway_ratio_subtitle: bool = True,
+        colors: dict = {},
+        signature:bool = True,
+        save_figure:bool = True,
+        extension:list = ['png','pdf']):
         """
         Plots cycleways overlaid city area. Returns matplotlib fig,ax.
         cycleways: (networkx.MultiDiGraph) cycleways info from get_city func, or osmnx.graph_from_place
@@ -130,43 +122,62 @@ class BikeNetworkMapper:
             plt.title(f'Road to Cycleway Ratio is {rc_ratio_round}:1',fontsize=8)
             plt.suptitle(self.city_name,fontsize=14, y=.955)
 
-        if self.city_area is not None:
+        colors_dict = {
+            'city_area': 'gainsboro',
+            'buildings': 'dimgrey',
+            'roads': 'dimgrey',
+            'cycleways': 'limegreen',
+            'water': 'dodgerblue',
+            'green': 'olivedrab'}
+
+        colors_dict.update(colors)
+
+        if colors_dict['city_area'] is not None:
             self.city_area.plot(
                 ax=ax, 
-                facecolor='gainsboro')
+                facecolor=colors_dict['city_area'])
 
-        if self.green is not None:
+        if colors_dict['green'] is not None:
             ox.plot_footprints(
                 self.green, ax=ax,
-                color='lightgreen', bgcolor='white',
+                color=colors_dict['green'], 
+                bgcolor='white',
                 show=False, close=False)
 
-        if self.water is not None:
+        if colors_dict['water'] is not None:
             ox.plot_footprints(
                 self.water, ax=ax,
-                color='cornflowerblue', bgcolor='white',
+                color=colors_dict['water'], 
+                bgcolor='white',
                 show=False, close=False)
         
-        if self.buildings is not None:
+        if colors_dict['buildings'] is not None:
             ox.plot_footprints(
                 self.buildings, ax=ax,
-                color='dimgrey',
+                color=colors_dict['buildings'],
                 show=False, close=False)
 
-        if self.roads is not None:
+        if colors_dict['roads'] is not None:
             ox.plot_graph(
                 self.roads,ax=ax,
                 node_size=0,
                 edge_linewidth=.25,
-                edge_color='dimgrey',
+                edge_color=colors_dict['roads'],
                 show=False, close=False)
 
-        if self.cycleways is not None:
+        if colors_dict['cycleways'] is not None:
             ox.plot_graph(
                 self.cycleways,ax=ax,
                 node_size=0,
-                edge_linewidth=.85,
-                edge_color='tomato',
+                edge_linewidth=.9,
+                edge_color='white',
+                show=False, close=False)
+            
+            ox.plot_graph(
+                self.cycleways,ax=ax,
+                node_size=0,
+                edge_linewidth=.6,
+                edge_color=colors_dict['cycleways'],
                 show=False, close=False)
         
         if signature is True:
