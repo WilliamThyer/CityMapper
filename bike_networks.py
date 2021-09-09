@@ -13,6 +13,7 @@ class BikeNetworkMapper:
         self.city_name = city_name
         self.city_limits = city_limits
 
+        self.buildings = None
         self.cycleways = None
         self.roads = None
         self.city_area = None
@@ -43,16 +44,13 @@ class BikeNetworkMapper:
         self.cycleways = ox.utils_graph.remove_isolated_nodes(cycleways)
 
 
-    def get_footprints(self):
+    def get_buildings(self):
         """
         UNSTABLE
         Returns footprints of buildings. Seems to timeout for larger cities.
         """
-        tags = {"building": True}
-        footprints = ox.geometries_from_place(self.city_name, tags)
-        # ox.plot_footprints(footprints, ax=ax,color='dimgrey')
 
-        return footprints
+        self.buildings = ox.geometries_from_place(self.city_name, tags = {"building": True, 'landuse': 'construction'})
 
 
     def get_city(self, overwrite=False):
@@ -67,21 +65,23 @@ class BikeNetworkMapper:
         self.get_cycleways()
 
         green_tags = {
-        'landuse':['village_green','grass','forest','cemetary','greenfield','meadow','orchard','vineyard'], 
-        'leisure':['park','garden','golf_course','nature_reserve'], 
-        'natural':['shrubbery','scrub','fell','grassland','wood'],
-        'tourism': 'camp_site',
-        'amenity': 'grave_yard'}
+            'landuse':['village_green','grass','forest','cemetary','greenfield','meadow','orchard','vineyard'], 
+            'leisure':['park','garden','golf_course','nature_reserve'], 
+            'natural':['shrubbery','scrub','fell','grassland','wood'],
+            'tourism': 'camp_site',
+            'amenity': 'grave_yard'}
 
         if self.city_limits is True:
             self.roads = ox.graph_from_place(self.city_name, network_type='drive')
             self.water = ox.geometries_from_polygon(self.city_area.unary_union, tags={'water':['river','lake'],"natural":["water"]})
             self.green = ox.geometries_from_polygon(self.city_area.unary_union, tags=green_tags)
+            self.buildings = ox.geometries_from_place(self.city_name, tags = {"building": True, 'landuse': 'construction'})
         
         else:
             self.roads = ox.graph_from_bbox(self.north, self.south, self.east, self.west, network_type='drive')
             self.water = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={'water':['river','lake'],"natural":["water"]})
             self.green = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags=green_tags)
+            self.buildings = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={"building": True, 'landuse': 'construction'})
 
 
     def calc_road_cycleway_ratio(self):
@@ -121,7 +121,7 @@ class BikeNetworkMapper:
             ax.set_title(self.city_name,fontsize=12)
 
         elif road_cycleway_ratio_subtitle is True:
-            # make subtitle in hacky way
+
             if self.rc_ratio is None:
                 self.calc_road_cycleway_ratio()
 
@@ -138,13 +138,19 @@ class BikeNetworkMapper:
         if self.green is not None:
             ox.plot_footprints(
                 self.green, ax=ax,
-                color='forestgreen', bgcolor='white',
+                color='lightgreen', bgcolor='white',
                 show=False, close=False)
 
         if self.water is not None:
             ox.plot_footprints(
                 self.water, ax=ax,
                 color='cornflowerblue', bgcolor='white',
+                show=False, close=False)
+        
+        if self.buildings is not None:
+            ox.plot_footprints(
+                self.buildings, ax=ax,
+                color='dimgrey',
                 show=False, close=False)
 
         if self.roads is not None:
@@ -160,7 +166,7 @@ class BikeNetworkMapper:
                 self.cycleways,ax=ax,
                 node_size=0,
                 edge_linewidth=.85,
-                edge_color='limegreen',
+                edge_color='tomato',
                 show=False, close=False)
         
         if signature is True:
