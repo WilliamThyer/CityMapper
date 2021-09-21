@@ -18,6 +18,7 @@ class BikeNetworkMapper:
         self.roads = None
         self.city_area = None
         self.water = None
+        self.green = None
         self.rc_ratio = None
 
         if plt_params_dict is None:
@@ -44,16 +45,34 @@ class BikeNetworkMapper:
         self.cycleways = ox.utils_graph.remove_isolated_nodes(cycleways)
 
 
-    def get_city(self, overwrite=False):
+    def get_city(
+        self, 
+        city_elements: dict = {}):
         """
-        Creates cycleways and road info (networkx.MultiDiGraph) and city area (geopandas.geodataframe.GeoDataFrame).
+        Creates info for plotting.
+        cycleways (networkx.MultiDiGraph)
+        roads (networkx.MultiDiGraph) 
+        city_area (geopandas.geodataframe.GeoDataFrame)
+        green
+        water
+        buildings
         """
         print(f"Loading data for {self.city_name}. May take a few minutes.")
+
+        city_dict = {
+            'buildings': True,
+            'roads': True,
+            'cycleways': True,
+            'water': True,
+            'green': True}
+
+        city_dict.update(city_elements)
 
         self.city_area = ox.geocode_to_gdf(self.city_name)
         self.west, self.south, self.east, self.north = self.city_area.total_bounds
 
-        self.get_cycleways()
+        if city_dict['cycleways'] is True:
+            self.get_cycleways()
 
         green_tags = {
             'landuse':['village_green','grass','forest','cemetary','greenfield','meadow','orchard','vineyard'], 
@@ -63,16 +82,24 @@ class BikeNetworkMapper:
             'amenity': 'grave_yard'}
 
         if self.city_limits is True:
-            self.roads = ox.graph_from_place(self.city_name, network_type='drive')
-            self.water = ox.geometries_from_polygon(self.city_area.unary_union, tags={'water':['river','lake'],"natural":["water"]})
-            self.green = ox.geometries_from_polygon(self.city_area.unary_union, tags=green_tags)
-            self.buildings = ox.geometries_from_place(self.city_name, tags = {"building": True, 'landuse': 'construction'})
+            if city_dict['roads'] is True:
+                self.roads = ox.graph_from_place(self.city_name, network_type='drive')
+            if city_dict['water'] is True:
+                self.water = ox.geometries_from_polygon(self.city_area.unary_union, tags={'water':['river','lake'],"natural":["water"]})
+            if city_dict['green'] is True:
+                self.green = ox.geometries_from_polygon(self.city_area.unary_union, tags=green_tags)
+            if city_dict['buildings'] is True:
+                self.buildings = ox.geometries_from_place(self.city_name, tags = {"building": True, 'landuse': 'construction'})
         
         else:
-            self.roads = ox.graph_from_bbox(self.north, self.south, self.east, self.west, network_type='drive')
-            self.water = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={'water':['river','lake'],"natural":["water"]})
-            self.green = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags=green_tags)
-            self.buildings = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={"building": True, 'landuse': 'construction'})
+            if city_dict['roads'] is True:
+                self.roads = ox.graph_from_bbox(self.north, self.south, self.east, self.west, network_type='drive')
+            if city_dict['water'] is True:
+                self.water = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={'water':['river','lake'],"natural":["water"]})
+            if city_dict['green'] is True:
+                self.green = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags=green_tags)
+            if city_dict['buildings'] is True:
+                self.buildings = ox.geometries.geometries_from_bbox(self.north, self.south, self.east, self.west, tags={"building": True, 'landuse': 'construction'})
 
 
     def calc_road_cycleway_ratio(self):
@@ -132,32 +159,33 @@ class BikeNetworkMapper:
 
         colors_dict.update(colors)
 
-        if colors_dict['city_area'] is not None:
+        if (colors_dict['city_area'] is not None) & (self.city_area is not None):
             self.city_area.plot(
                 ax=ax, 
                 facecolor=colors_dict['city_area'])
 
-        if colors_dict['green'] is not None:
+        if (colors_dict['green'] is not None) & (self.green is not None):
+            print('y')
             ox.plot_footprints(
                 self.green, ax=ax,
                 color=colors_dict['green'], 
                 bgcolor='white',
                 show=False, close=False)
 
-        if colors_dict['water'] is not None:
+        if (colors_dict['water'] is not None) & (self.water is not None):
             ox.plot_footprints(
                 self.water, ax=ax,
                 color=colors_dict['water'], 
                 bgcolor='white',
                 show=False, close=False)
         
-        if colors_dict['buildings'] is not None:
+        if (colors_dict['buildings'] is not None) & (self.buildings is not None):
             ox.plot_footprints(
                 self.buildings, ax=ax,
                 color=colors_dict['buildings'],
                 show=False, close=False)
 
-        if colors_dict['roads'] is not None:
+        if (colors_dict['roads'] is not None) & (self.roads is not None):
             ox.plot_graph(
                 self.roads,ax=ax,
                 node_size=0,
@@ -165,7 +193,7 @@ class BikeNetworkMapper:
                 edge_color=colors_dict['roads'],
                 show=False, close=False)
 
-        if colors_dict['cycleways'] is not None:
+        if (colors_dict['cycleways'] is not None) & (self.cycleways is not None):
             ox.plot_graph(
                 self.cycleways,ax=ax,
                 node_size=0,
