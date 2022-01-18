@@ -14,13 +14,7 @@ class CityMapper:
         self.green = None
         self.rc_ratio = None
 
-        self.colors_dict = {
-            'city_area': 'gainsboro',
-            'buildings': 'dimgrey',
-            'roads': 'dimgrey',
-            'cycleways': 'limegreen',
-            'water': 'dodgerblue',
-            'green': 'olivedrab'}
+        self.reset_color_dict()
 
         self.green_tags = {
             'landuse':['village_green','grass','forest','cemetary','greenfield','meadow','orchard','vineyard'], 
@@ -48,6 +42,15 @@ class CityMapper:
             "font.family": "serif"}
         plt.rcParams.update(plt_params_dict)
 
+    def reset_color_dict(self):
+        
+        self.colors_dict = {
+            'city_area': 'gainsboro',
+            'buildings': 'dimgrey',
+            'roads': 'dimgrey',
+            'cycleways': 'limegreen',
+            'water': 'dodgerblue',
+            'green': 'olivedrab'}
 
     def load_city(
         self,
@@ -71,6 +74,7 @@ class CityMapper:
 
         if city_elements is None:
             city_elements = {}
+        city_dict_copy = self.city_dict.copy()
         self.city_dict.update(city_elements)
 
         self.city_area = ox.geocode_to_gdf(self.city_name)
@@ -80,6 +84,9 @@ class CityMapper:
             self._get_city_data_within_city_limits()
         else:
             self._get_city_data_within_rectangle()
+
+        # reset self.city_dict to default
+        self.city_dict = city_dict_copy.copy()
 
     def _get_city_data_within_city_limits(self):
 
@@ -145,6 +152,7 @@ class CityMapper:
 
         if colors is None:
             colors = {}
+        colors_dict_copy = self.colors_dict.copy()
         self.colors_dict.update(colors)
 
         self._plot_city_area(ax)
@@ -161,6 +169,9 @@ class CityMapper:
 
         ax.axis('off')
         plt.tight_layout()
+
+        # reset self.colors_dict to default
+        self.colors_dict = colors_dict_copy.copy()
 
         return fig
 
@@ -243,7 +254,6 @@ class CityMapper:
             plt.suptitle(self.city_name, fontsize=14, y=.955)
             ax.set_title(f'Road to Cycleway Ratio is {rc_ratio_round}:1',fontsize=8)
 
-
     def calc_road_cycleway_ratio(self):
         """
         Calculates ratio of cycleways to roads. Uses osmnx.basic_stats.
@@ -256,9 +266,14 @@ class CityMapper:
         r = ox.basic_stats(self.roads)
         self.rc_ratio = r['edge_length_total']/c['edge_length_total']
 
-    def savefig(self, fig, extension=['png','pdf']):
+    def savefig(self, fig, extension=['png','pdf'], filename = None):
+        
         if not isinstance(extension, list):
             extension = [extension]
+        
+        if filename is None:
+            filename = self.city_name
+
         for ext in extension:
-            filename = f'examples/{ext}/{self.city_name}.{ext}'
-            fig.savefig(filename,dpi=1000,facecolor='w',transparent=False,bbox_inches='tight')
+            full_filename = f'examples/{ext}/{filename}.{ext}'
+            fig.savefig(full_filename,dpi=1000,facecolor='w',transparent=False,bbox_inches='tight')
