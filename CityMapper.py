@@ -14,20 +14,35 @@ class CityMapper:
         self.green = None
         self.rc_ratio = None
 
-        self.reset_color_dict()
+        self.colors_dict = {
+            'city_area': 'gainsboro',
+            'buildings': 'dimgrey',
+            'roads': 'dimgrey',
+            'cycleways': 'limegreen',
+            'water': 'dodgerblue',
+            'green': 'olivedrab'}
 
         self.green_tags = {
-            'landuse':['village_green','grass','forest','cemetary','greenfield','meadow','orchard','vineyard'], 
+            'landuse':[
+                'village_green','grass','forest','cemetary','greenfield',
+                'meadow','orchard','vineyard', 'allotments', 'farmland',
+                'plant_nursery', 'recreation_ground', 'village_green'], 
             'leisure':['park','garden','golf_course','nature_reserve'], 
-            'natural':['shrubbery','scrub','fell','grassland','wood'],
+            'natural':[
+                'shrubbery','scrub','fell','grassland','wood','heath',
+                'tree', 'tree_row', 'tundra'],
             'tourism': 'camp_site',
-            'amenity': 'grave_yard'}
+            'amenity': 'grave_yard',
+            'place': 'farm'
+        }
         
         self.water_tags = {
             'water': True,
             'natural': ['water', 'bay', 'spring', 'strait', 'wetland'],
             'place': ['sea', 'ocean'],
-            'waterway': ['river', 'riverbank', 'stream', 'tidal_channel', 'canal', 'drain', 'ditch', 'fairway']
+            'waterway': [
+                'river', 'riverbank', 'stream', 'tidal_channel', 'canal', 
+                'drain', 'ditch', 'fairway']
         }
 
         self.city_dict = {
@@ -41,16 +56,6 @@ class CityMapper:
             "figure.facecolor":  (1.0, 1.0, 1.0, 1.0),
             "font.family": "serif"}
         plt.rcParams.update(plt_params_dict)
-
-    def reset_color_dict(self):
-        
-        self.colors_dict = {
-            'city_area': 'gainsboro',
-            'buildings': 'dimgrey',
-            'roads': 'dimgrey',
-            'cycleways': 'limegreen',
-            'water': 'dodgerblue',
-            'green': 'olivedrab'}
 
     def load_city(
         self,
@@ -276,4 +281,4 @@ class CityMapper:
 
         for ext in extension:
             full_filename = f'examples/{ext}/{filename}.{ext}'
-            fig.savefig(full_filename,dpi=1000,facecolor='w',transparent=False,bbox_inches='tight')
+            fig.savefig(full_filename,dpi=2000,facecolor='w',transparent=False,bbox_inches='tight')
