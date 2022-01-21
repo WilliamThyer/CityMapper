@@ -278,7 +278,7 @@ class CityMapper:
             edge_width = {}
         self.edge_width_dict_copy = self.edge_width_dict.copy()
         if self.query_type == 'city':
-            self.edge_width_dict.update({'roads':.5,'water':1,'railways':.5})
+            self.edge_width_dict.update({'roads':.25,'water':1,'railways':.25})
         self.edge_width_dict.update(edge_width)
     
     def _reset_plot_params(self):
