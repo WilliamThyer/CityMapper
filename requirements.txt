@@ -1,6 +1,7 @@
 ipywidgets
 ipython
+warnings
 osmnx
 voila
-matplotlib==3.3
+matplotlib
 numpy
