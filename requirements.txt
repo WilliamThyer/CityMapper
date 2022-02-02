@@ -1,0 +1,6 @@
+ipywidgets
+ipython
+osmnx
+voila
+matplotlib
+numpy
