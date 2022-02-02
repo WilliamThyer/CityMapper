@@ -1,6 +1,5 @@
 ipywidgets
 ipython
-warnings
 osmnx
 voila
 matplotlib
