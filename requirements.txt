@@ -1,7 +1,6 @@
-python==3.10
 ipywidgets
 ipython
 osmnx
 voila
-matplotlib
+matplotlib==3.5
 numpy
