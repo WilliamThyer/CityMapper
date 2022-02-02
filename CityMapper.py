@@ -242,7 +242,7 @@ class CityMapper:
 
         self._update_plot_params(colors, edge_colors, edge_width)
 
-        # self._plot_city_area(ax)
+        self._plot_city_area(ax)
         self._plot_green(ax)
         self._plot_water(ax)
         self._plot_buildings(ax)
@@ -300,8 +300,8 @@ class CityMapper:
             ox.plot_footprints(
                 self.green, ax=ax,
                 color=self.colors_dict['green'], 
-                edgecolor=self.edge_colors_dict['green'],
-                edgewidth=self.edge_width_dict['green'],
+                # edgecolor=self.edge_colors_dict['green'],
+                # edgewidth=self.edge_width_dict['green'],
                 bgcolor='white',
                 show=False, close=False)
 
@@ -311,8 +311,8 @@ class CityMapper:
             ox.plot_footprints(
                 self.water, ax=ax,
                 color=self.colors_dict['water'],
-                edgecolor = self.edge_colors_dict['water'],
-                edgewidth=self.edge_width_dict['water'],
+                # edgecolor = self.edge_colors_dict['water'],
+                # edgewidth=self.edge_width_dict['water'],
                 bgcolor='white',
                 show=False, close=False)
     
@@ -340,8 +340,8 @@ class CityMapper:
             ox.plot_footprints(
                 self.buildings, ax=ax,
                 color=self.colors_dict['buildings'],
-                edgecolor=self.edge_colors_dict['buildings'],
-                edgewidth=self.edge_width_dict['buildings'],
+                # edgecolor=self.edge_colors_dict['buildings'],
+                # edgewidth=self.edge_width_dict['buildings'],
                 show=False, close=False)
     
     def _plot_cycleways(self, ax):
