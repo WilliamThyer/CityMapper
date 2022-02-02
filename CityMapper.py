@@ -97,7 +97,7 @@ class CityMapper:
         buildings
         """
 
-        print(f"Loading data for {city_name}. May take a few minutes.")
+        # print(f"Loading data for {city_name}. May take a few minutes.")
 
         self.city_name = city_name
         self.city_limits = city_limits
@@ -236,13 +236,13 @@ class CityMapper:
         Plots cycleways overlaid city area. Returns matplotlib fig, ax.        
         
         """
-        fig, ax = plt.subplots(figsize=(6,6))
+        fig, ax = plt.subplots(figsize=(15,15))
 
         self._set_title(ax, title, road_cycleway_ratio_subtitle)
 
         self._update_plot_params(colors, edge_colors, edge_width)
 
-        self._plot_city_area(ax)
+        # self._plot_city_area(ax)
         self._plot_green(ax)
         self._plot_water(ax)
         self._plot_buildings(ax)
@@ -253,7 +253,7 @@ class CityMapper:
         fig.text(s="William Thyer\nOpenStreetMap", 
             x=1, y=-.01, transform = ax.transAxes,
             horizontalalignment='right',verticalalignment='top',
-            color='k',fontsize=5)
+            color='k',fontsize=12)
 
         ax.axis('off')
         plt.tight_layout()
@@ -384,19 +384,19 @@ class CityMapper:
                 title = self.address
 
         if road_cycleway_ratio_subtitle is False:
-            ax.set_title(title,fontsize=12)
+            ax.set_title(title,fontsize=20)
 
         else:
             if (self.roads is None) or (self.cycleways is None):
                 print('Roads and cycleways must be loaded. Ratio not included.')
-                ax.set_title(title,fontsize=12)
+                ax.set_title(title,fontsize=16)
                 return
 
             self.calc_road_cycleway_ratio()
 
             rc_ratio_round = round(self.rc_ratio)
             
-            plt.suptitle(title, fontsize=14, y=.955)
+            plt.suptitle(title, fontsize=20, y=.955)
             ax.set_title(f'Road to Cycleway Ratio is {rc_ratio_round}:1',fontsize=8)
 
     def calc_road_cycleway_ratio(self):
