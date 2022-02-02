@@ -1,4 +1,4 @@
-# bike_networks
+# CityMapper
 
 By William Thyer
 Using OSMnx in Python to visualize and quantify bikeability of cities.
